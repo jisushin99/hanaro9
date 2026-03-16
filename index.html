@@ -12,20 +12,19 @@
     }
 
     :root {
-      --bg: #f0f7ff;
+      --bg: #f8fafc;
       --surface: #ffffff;
       --text: #0f172a;
       --muted: #64748b;
-      --line: #cce4ff;
-      --primary: #0066ff;
-      --primary-dark: #0052cc;
-      --primary-light: #e6f0ff;
-      --accent: #dbeafe;
+      --line: #e2e8f0;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --accent: #eff6ff;
       --success: #16a34a;
-      --shadow: 0 4px 20px rgba(0, 102, 255, 0.08);
-      --radius-lg: 20px;
-      --radius-md: 14px;
-      --radius-sm: 10px;
+      --shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 12px;
     }
 
     body {
@@ -101,13 +100,10 @@
     .btn {
       background: var(--primary);
       color: white;
-      padding: 14px 22px;
-      border-radius: var(--radius-sm);
     }
 
     .btn:hover {
       background: var(--primary-dark);
-      transform: translateY(-1px);
     }
 
     .btn-outline {
@@ -142,8 +138,8 @@
 
     .badge {
       display: inline-block;
-      background: var(--primary-light);
-      color: var(--primary);
+      background: var(--accent);
+      color: #1d4ed8;
       padding: 8px 14px;
       border-radius: 999px;
       font-size: 0.9rem;
@@ -176,36 +172,23 @@
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
-      color: var(--primary);
+      color: #334155;
       font-size: 0.95rem;
     }
 
     .quick-stats span {
-      background: var(--primary-light);
+      background: white;
       border: 1px solid var(--line);
       border-radius: 999px;
       padding: 10px 14px;
-      font-weight: 600;
     }
 
-    .btn-outline {
-      background: white;
-      color: var(--primary);
-      border: 2px solid var(--primary-light);
-    }
-
-    .btn-outline:hover {
-      background: var(--primary-light);
-      border-color: var(--primary);
-    }
-
-    .btn-light {
-      background: var(--primary-light);
-      color: var(--primary);
-    }
-
-    .btn-light:hover {
-      background: var(--accent);
+    .hero-panel {
+      background: linear-gradient(145deg, #1d4ed8, #60a5fa);
+      border-radius: 28px;
+      padding: 28px;
+      color: white;
+      box-shadow: 0 25px 60px rgba(37, 99, 235, 0.24);
     }
 
     .hero-panel h3 {
@@ -239,13 +222,6 @@
 
     section {
       padding: 46px 0;
-    }
-
-    #profiles {
-      background: linear-gradient(180deg, var(--surface) 0%, var(--primary-light) 100%);
-      padding: 60px 0;
-      border-radius: 40px;
-      margin: 20px 0;
     }
 
     .section-title {
@@ -380,20 +356,11 @@
       grid-template-columns: repeat(4, 1fr);
     }
 
-.profile-card,
+    .profile-card,
     .request-card,
     .step-card,
     .review-card {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .profile-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 30px rgba(0, 102, 255, 0.15);
+      padding: 22px;
     }
 
     .profile-top {
@@ -403,31 +370,17 @@
       margin-bottom: 16px;
     }
 
-.avatar {
+    .avatar {
       width: 56px;
       height: 56px;
       border-radius: 50%;
       display: grid;
       place-items: center;
-      background: var(--primary-light);
-      color: var(--primary);
+      background: #dbeafe;
+      color: #1d4ed8;
       font-weight: 800;
       font-size: 1.1rem;
       flex-shrink: 0;
-    }
-
-    .tag {
-      background: var(--primary-light);
-      color: var(--primary);
-      border-radius: 999px;
-      padding: 6px 10px;
-      font-size: 0.82rem;
-      font-weight: 700;
-    }
-
-    .tag.gray {
-      background: #f0f5ff;
-      color: #4a6fa5;
     }
 
     .profile-card h3,
@@ -519,31 +472,22 @@
     }
 
     .step-number {
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
-      background: var(--primary-light);
-      color: var(--primary);
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: #dbeafe;
+      color: #1d4ed8;
       display: grid;
       place-items: center;
       font-weight: 800;
       margin-bottom: 14px;
     }
 
-    .nav-links a {
-      position: relative;
-    }
-
-    .nav-links a:first-child {
-      color: var(--primary);
-      font-weight: 700;
-    }
-
     .cta {
-      background: linear-gradient(135deg, #003380 0%, #0066ff 100%);
+      background: #0f172a;
       color: white;
       border-radius: 30px;
-      padding: 48px 32px;
+      padding: 42px 28px;
       text-align: center;
     }
 
@@ -553,7 +497,7 @@
     }
 
     .cta p {
-      color: rgba(255, 255, 255, 0.85);
+      color: #cbd5e1;
       margin-bottom: 22px;
     }
 
@@ -635,7 +579,7 @@
           </p>
           <div class="hero-actions">
             <button class="btn">소일거리 요청하기</button>
-            <button class="btn" style="background: white; color: var(--primary);">수행자 프로필 등록</button>
+            <button class="btn-light">수행자 프로필 등록</button>
           </div>
           <div class="quick-stats">
             <span>누적 요청 12,430건</span>
