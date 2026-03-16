@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>소일거리 매칭 플랫폼</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --line: #e2e8f0;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --accent: #eff6ff;
+      --success: #16a34a;
+      --shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 12px;
+    }
+
+    body {
+      font-family: "Pretendard", "Noto Sans KR", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+    }
+
+    .logo {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      color: #334155;
+      font-size: 0.96rem;
+      align-items: center;
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn,
+    .btn-outline,
+    .btn-light {
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 13px 18px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .btn {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-outline {
+      background: white;
+      color: var(--primary);
+      border: 1px solid #bfdbfe;
+    }
+
+    .btn-outline:hover {
+      background: var(--accent);
+    }
+
+    .btn-light {
+      background: #eff6ff;
+      color: #1e40af;
+    }
+
+    .btn-light:hover {
+      background: #dbeafe;
+    }
+
+    .hero {
+      padding: 72px 0 44px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-block;
+      background: var(--accent);
+      color: #1d4ed8;
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-size: clamp(2.2rem, 4.4vw, 3.8rem);
+      line-height: 1.16;
+      letter-spacing: -0.03em;
+      margin-bottom: 18px;
+    }
+
+    .hero-copy p {
+      color: var(--muted);
+      font-size: 1.05rem;
+      margin-bottom: 28px;
+      max-width: 580px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 26px;
+    }
+
+    .quick-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      color: #334155;
+      font-size: 0.95rem;
+    }
+
+    .quick-stats span {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 10px 14px;
+    }
+
+    .hero-panel {
+      background: linear-gradient(145deg, #1d4ed8, #60a5fa);
+      border-radius: 28px;
+      padding: 28px;
+      color: white;
+      box-shadow: 0 25px 60px rgba(37, 99, 235, 0.24);
+    }
+
+    .hero-panel h3 {
+      font-size: 1.35rem;
+      margin-bottom: 10px;
+    }
+
+    .hero-panel p {
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 20px;
+    }
+
+    .mini-cards {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .mini-card {
+      background: rgba(255, 255, 255, 0.16);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 18px;
+      padding: 18px;
+    }
+
+    .mini-card strong {
+      display: block;
+      font-size: 1.25rem;
+      margin-bottom: 6px;
+    }
+
+    section {
+      padding: 46px 0;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .section-title h2 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    .section-title p {
+      color: var(--muted);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .search-request {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+    }
+
+    .panel,
+    .card,
+    .request-card,
+    .profile-card,
+    .step-card,
+    .review-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+    }
+
+    .panel {
+      padding: 24px;
+    }
+
+    .panel h3 {
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+    }
+
+    .panel p {
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .field,
+    .field-full {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .field-full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #334155;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 13px 14px;
+      background: white;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 112px;
+      resize: vertical;
+    }
+
+    .helper {
+      color: var(--muted);
+      font-size: 0.88rem;
+      margin-top: 4px;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 10px 0 18px;
+      color: #475569;
+      font-size: 0.94rem;
+    }
+
+    .checkbox-row input {
+      width: 18px;
+      height: 18px;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .profiles-grid,
+    .requests-grid,
+    .steps-grid,
+    .reviews-grid {
+      display: grid;
+      gap: 20px;
+    }
+
+    .profiles-grid,
+    .requests-grid,
+    .reviews-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .steps-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .profile-card,
+    .request-card,
+    .step-card,
+    .review-card {
+      padding: 22px;
+    }
+
+    .profile-top {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: #dbeafe;
+      color: #1d4ed8;
+      font-weight: 800;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .profile-card h3,
+    .request-card h3,
+    .step-card h3,
+    .review-card h3 {
+      font-size: 1.12rem;
+      margin-bottom: 6px;
+    }
+
+    .sub {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 14px 0;
+    }
+
+    .tag {
+      background: #eff6ff;
+      color: #1d4ed8;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .tag.gray {
+      background: #f1f5f9;
+      color: #475569;
+    }
+
+    .meta-list {
+      display: grid;
+      gap: 8px;
+      color: #475569;
+      font-size: 0.93rem;
+      margin-bottom: 18px;
+    }
+
+    .price {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 14px;
+    }
+
+    .request-card p,
+    .review-card p,
+    .step-card p,
+    .profile-card p {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .request-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 14px;
+    }
+
+    .status {
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .status.open {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .status.fast {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .status.soon {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .step-number {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: #dbeafe;
+      color: #1d4ed8;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      margin-bottom: 14px;
+    }
+
+    .cta {
+      background: #0f172a;
+      color: white;
+      border-radius: 30px;
+      padding: 42px 28px;
+      text-align: center;
+    }
+
+    .cta h2 {
+      font-size: 2rem;
+      margin-bottom: 12px;
+    }
+
+    .cta p {
+      color: #cbd5e1;
+      margin-bottom: 22px;
+    }
+
+    .cta-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    footer {
+      padding: 28px 0 42px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 1024px) {
+      .profiles-grid,
+      .requests-grid,
+      .reviews-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .steps-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 860px) {
+      .hero-grid,
+      .search-request,
+      .profiles-grid,
+      .requests-grid,
+      .reviews-grid,
+      .steps-grid,
+      .field-grid,
+      .mini-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-links,
+      .nav-actions .btn-outline {
+        display: none;
+      }
+
+      .hero {
+        padding-top: 48px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div class="logo">소확행</div>
+      <nav class="nav-links">
+        <a href="#profiles">수행자 찾기</a>
+        <a href="#request">소일거리 등록</a>
+        <a href="#jobs">지금 올라온 요청</a>
+        <a href="#how">이용 방법</a>
+      </nav>
+      <div class="nav-actions">
+        <button class="btn-outline">로그인</button>
+        <button class="btn">무료로 시작하기</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <span class="badge">동네 기반 소일거리 매칭 플랫폼</span>
+          <h1>수행자는 프로필을 올리고<br />요청자는 필요한 일을 바로 맡길 수 있어요</h1>
+          <p>
+            벌레 잡기, 짐 옮기기, 대신 줄 서기, 간단한 정리나 심부름까지.
+            가까운 동네의 수행자와 요청자를 빠르게 연결하는 초단기 생활 매칭 페이지입니다.
+          </p>
+          <div class="hero-actions">
+            <button class="btn">소일거리 요청하기</button>
+            <button class="btn-light">수행자 프로필 등록</button>
+          </div>
+          <div class="quick-stats">
+            <span>누적 요청 12,430건</span>
+            <span>등록 수행자 3,280명</span>
+            <span>평균 매칭 시간 18분</span>
+          </div>
+        </div>
+
+        <div class="hero-panel">
+          <h3>오늘 가장 많이 찾는 소일거리</h3>
+          <p>가벼운 심부름부터 짧은 시간 안에 끝나는 생활 요청까지 한 번에 확인할 수 있습니다.</p>
+          <div class="mini-cards">
+            <div class="mini-card">
+              <strong>벌레 퇴치</strong>
+              <span>지금 바로 가능한 요청 많음</span>
+            </div>
+            <div class="mini-card">
+              <strong>짐 옮기기</strong>
+              <span>1인 가구 생활 도움 수요 증가</span>
+            </div>
+            <div class="mini-card">
+              <strong>대신 수령</strong>
+              <span>짧은 외출 대행 요청 활발</span>
+            </div>
+            <div class="mini-card">
+              <strong>줄 서기</strong>
+              <span>주말 인기 요청 카테고리</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="request">
+      <div class="container">
+        <div class="section-title">
+          <h2>요청자는 필요한 소일거리를 바로 등록할 수 있어요</h2>
+          <p>무엇을, 어디서, 언제까지 필요한지 간단히 입력하면 주변 수행자에게 빠르게 전달됩니다.</p>
+        </div>
+
+        <div class="search-request">
+          <div class="panel">
+            <h3>소일거리 요청 등록</h3>
+            <p>급한 일도, 사소한 부탁도 부담 없이 올려보세요.</p>
+            <div class="field-grid">
+              <div class="field">
+                <label>요청 제목</label>
+                <input type="text" placeholder="예: 집에 나온 벌레 잡아주실 분" />
+              </div>
+              <div class="field">
+                <label>카테고리</label>
+                <select>
+                  <option>카테고리 선택</option>
+                  <option>생활 심부름</option>
+                  <option>청소/정리</option>
+                  <option>물건 수령</option>
+                  <option>긴급 도움</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>지역</label>
+                <input type="text" placeholder="예: 성동구 성수동" />
+              </div>
+              <div class="field">
+                <label>희망 보수</label>
+                <input type="text" placeholder="예: 15,000원" />
+              </div>
+              <div class="field-full">
+                <label>상세 설명</label>
+                <textarea placeholder="필요한 일의 내용, 예상 소요 시간, 준비물 등을 적어주세요."></textarea>
+                <div class="helper">예: 현관 앞에 큰 벌레가 나와서 바로 잡아주실 분이 필요해요. 10분 내외 예상입니다.</div>
+              </div>
+            </div>
+            <div class="checkbox-row">
+              <input type="checkbox" checked />
+              <span>지금 가능한 수행자에게 우선 노출하기</span>
+            </div>
+            <div class="button-row">
+              <button class="btn">요청 등록하기</button>
+              <button class="btn-outline">임시 저장</button>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h3>수행자 프로필 등록</h3>
+            <p>가능한 일과 시간대를 등록하면 요청자가 바로 확인하고 연락할 수 있습니다.</p>
+            <div class="field-grid">
+              <div class="field">
+                <label>이름</label>
+                <input type="text" placeholder="예: 김민수" />
+              </div>
+              <div class="field">
+                <label>활동 지역</label>
+                <input type="text" placeholder="예: 성수, 건대, 왕십리" />
+              </div>
+              <div class="field-full">
+                <label>가능한 일</label>
+                <input type="text" placeholder="예: 벌레 잡기, 택배 대신 받기, 간단 청소, 줄 서기" />
+              </div>
+              <div class="field">
+                <label>가능 시간대</label>
+                <select>
+                  <option>시간대 선택</option>
+                  <option>평일 낮</option>
+                  <option>평일 저녁</option>
+                  <option>주말 종일</option>
+                  <option>상시 가능</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>기본 희망 보수</label>
+                <input type="text" placeholder="예: 건당 10,000원부터" />
+              </div>
+              <div class="field-full">
+                <label>자기소개</label>
+                <textarea placeholder="내가 잘할 수 있는 일, 빠르게 대응 가능한 요청, 강점을 적어주세요."></textarea>
+              </div>
+            </div>
+            <div class="button-row">
+              <button class="btn">프로필 등록하기</button>
+              <button class="btn-outline">미리보기</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="profiles">
+      <div class="container">
+        <div class="section-title">
+          <h2>지금 활동 중인 수행자 프로필</h2>
+          <p>요청자는 프로필을 보고 원하는 수행자를 직접 선택하거나 매칭을 받을 수 있습니다.</p>
+        </div>
+
+        <div class="profiles-grid">
+          <div class="profile-card">
+            <div class="profile-top">
+              <div class="avatar">김</div>
+              <div>
+                <h3>김민수</h3>
+                <div class="sub">성수 · 건대 · 왕십리 활동</div>
+              </div>
+            </div>
+            <div class="tag-row">
+              <span class="tag">벌레 잡기</span>
+              <span class="tag">짐 옮기기</span>
+              <span class="tag gray">평일 저녁 가능</span>
+            </div>
+            <div class="meta-list">
+              <span>응답 속도 10분 이내</span>
+              <span>누적 수행 48건</span>
+              <span>평점 4.9 / 5.0</span>
+            </div>
+            <p>혼자 하기 애매한 생활 심부름을 빠르게 도와드립니다. 간단한 정리, 벌레 퇴치, 짐 이동 가능해요.</p>
+          </div>
+
+          <div class="profile-card">
+            <div class="profile-top">
+              <div class="avatar">박</div>
+              <div>
+                <h3>박지은</h3>
+                <div class="sub">성수 · 서울숲 · 뚝섬 활동</div>
+              </div>
+            </div>
+            <div class="tag-row">
+              <span class="tag">대신 수령</span>
+              <span class="tag">줄 서기</span>
+              <span class="tag gray">주말 종일 가능</span>
+            </div>
+            <div class="meta-list">
+              <span>응답 속도 18분 이내</span>
+              <span>누적 수행 72건</span>
+              <span>평점 4.8 / 5.0</span>
+            </div>
+            <p>예약 방문, 음식 픽업, 대기 줄 대신 서기처럼 시간을 아껴주는 소일거리를 주로 맡고 있습니다.</p>
+          </div>
+
+          <div class="profile-card">
+            <div class="profile-top">
+              <div class="avatar">이</div>
+              <div>
+                <h3>이도윤</h3>
+                <div class="sub">한양대 · 왕십리 · 성동구 활동</div>
+              </div>
+            </div>
+            <div class="tag-row">
+              <span class="tag">가구 이동</span>
+              <span class="tag">간단 청소</span>
+              <span class="tag gray">상시 가능</span>
+            </div>
+            <div class="meta-list">
+              <span>응답 속도 7분 이내</span>
+              <span>누적 수행 34건</span>
+              <span>평점 5.0 / 5.0</span>
+            </div>
+            <p>원룸 이사 보조, 물건 들어주기, 자취방 정리처럼 체력이 필요한 요청을 빠르게 도와드립니다.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="jobs">
+      <div class="container">
+        <div class="section-title">
+          <h2>지금 올라온 소일거리 요청</h2>
+          <p>수행자는 마음에 드는 요청을 골라 지원하고, 요청자는 지원자 중에서 선택할 수 있습니다.</p>
+        </div>
+
+        <div class="requests-grid">
+          <div class="request-card">
+            <div class="request-header">
+              <div>
+                <h3>집에 나온 벌레 바로 잡아주실 분</h3>
+                <div class="sub">성수동 · 10분 내 요청</div>
+              </div>
+              <span class="status fast">긴급</span>
+            </div>
+            <div class="tag-row">
+              <span class="tag">생활 도움</span>
+              <span class="tag gray">예상 10분</span>
+            </div>
+            <p>현관 근처에 벌레가 나와서 바로 처리해주실 분을 찾고 있어요. 약품은 집에 있습니다.</p>
+            <div class="price">보수 15,000원</div>
+            <button class="btn">이 요청 수행하기</button>
+          </div>
+
+          <div class="request-card">
+            <div class="request-header">
+              <div>
+                <h3>택배 대신 수령 후 문 앞 전달</h3>
+                <div class="sub">서울숲역 근처 · 오늘 오후</div>
+              </div>
+              <span class="status open">모집중</span>
+            </div>
+            <div class="tag-row">
+              <span class="tag">물건 수령</span>
+              <span class="tag gray">예상 20분</span>
+            </div>
+            <p>부재중이라 택배를 대신 받아서 저녁에 문 앞에 놔주실 분을 찾습니다. 무거운 물건은 아닙니다.</p>
+            <div class="price">보수 12,000원</div>
+            <button class="btn">이 요청 수행하기</button>
+          </div>
+
+          <div class="request-card">
+            <div class="request-header">
+              <div>
+                <h3>원룸 짐 조금만 함께 옮겨주세요</h3>
+                <div class="sub">왕십리 · 내일 오전</div>
+              </div>
+              <span class="status soon">예약</span>
+            </div>
+            <div class="tag-row">
+              <span class="tag">짐 옮기기</span>
+              <span class="tag gray">예상 30분</span>
+            </div>
+            <p>작은 서랍장과 박스 몇 개를 같은 건물 내에서 옮기는 작업입니다. 혼자 하기 어려워 도움 요청드립니다.</p>
+            <div class="price">보수 20,000원</div>
+            <button class="btn">이 요청 수행하기</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="how">
+      <div class="container">
+        <div class="section-title">
+          <h2>이용 방법</h2>
+          <p>요청자와 수행자가 서로 필요한 정보를 간단히 올리고 빠르게 연결되는 구조입니다.</p>
+        </div>
+
+        <div class="steps-grid">
+          <div class="step-card">
+            <div class="step-number">1</div>
+            <h3>수행자 프로필 등록</h3>
+            <p>가능한 일, 활동 지역, 시간대, 희망 보수를 적어두면 요청자가 먼저 찾아볼 수 있습니다.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-number">2</div>
+            <h3>요청자가 소일거리 등록</h3>
+            <p>필요한 일의 내용과 위치, 긴급도, 보수를 적으면 주변 수행자에게 노출됩니다.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-number">3</div>
+            <h3>매칭 및 채팅</h3>
+            <p>요청자는 프로필과 평점을 보고 수행자를 선택하고, 수행자는 요청 내용을 보고 지원할 수 있습니다.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-number">4</div>
+            <h3>완료 후 후기 작성</h3>
+            <p>작업이 끝나면 서로 후기를 남겨 신뢰도 높은 커뮤니티를 만들어갑니다.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="reviews">
+      <div class="container">
+        <div class="section-title">
+          <h2>사용자 후기</h2>
+          <p>작지만 꼭 필요한 순간에 빠르게 연결된 경험을 소개합니다.</p>
+        </div>
+
+        <div class="reviews-grid">
+          <div class="review-card">
+            <h3>요청자 후기</h3>
+            <p>늦은 밤 벌레가 나와서 너무 당황했는데 근처 수행자분이 바로 와주셔서 정말 큰 도움이 됐어요.</p>
+          </div>
+          <div class="review-card">
+            <h3>수행자 후기</h3>
+            <p>자투리 시간에 할 수 있는 요청이 많아서 부담 없이 부수입을 만들 수 있었고, 동네 기반이라 이동도 편했어요.</p>
+          </div>
+          <div class="review-card">
+            <h3>재이용 후기</h3>
+            <p>택배 수령이나 줄 서기처럼 사소하지만 꼭 필요한 일을 쉽게 맡길 수 있어서 여러 번 다시 쓰고 있습니다.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="cta">
+          <h2>필요한 순간, 바로 연결되는 동네 소일거리 플랫폼</h2>
+          <p>요청자는 급한 일을 해결하고, 수행자는 자신의 시간과 능력으로 수익을 만들 수 있습니다.</p>
+          <div class="cta-buttons">
+            <button class="btn">지금 요청 등록하기</button>
+            <button class="btn-outline">수행자 시작하기</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      © 2026 소확행. 가까운 동네의 작은 일을 빠르게 연결합니다.
+    </div>
+  </footer>
+</body>
+</html>
